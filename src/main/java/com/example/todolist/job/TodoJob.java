@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.Random;
 
 @Component
 public class TodoJob {
@@ -31,6 +32,11 @@ public class TodoJob {
             todo.setDescription("Description");
             todo.setFinish(new Date());
             todoRepository.save(todo);
+            int random = new Random().nextInt(3);
+            LOGGER.info(String.valueOf(random));
+            if (random == 2){
+                throw new Exception("\nNumber 3 was generated.\n");
+            }
         }catch (Exception e){
             LOGGER.error("Error found on TodoJob: ", e);
         }
