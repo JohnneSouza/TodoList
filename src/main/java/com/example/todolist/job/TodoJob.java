@@ -56,6 +56,12 @@ public class TodoJob {
             String[] nextLine;
             while ((nextLine = reader.readNext()) != null) {
                 LOGGER.info("Value1: {} | Value2: {}", nextLine[0], nextLine[1]);
+                Todo todo = new Todo();
+                todo.setTitle(nextLine[0]);
+                todo.setDescription(nextLine[1]);
+                todo.setFinish(new Date());
+                Todo dbTodo = todoRepository.save(todo);
+                LOGGER.info("Inserting Todo: {}", dbTodo);
             }
         }catch (IOException ex){
             LOGGER.error("Error reading CSV File", ex);
