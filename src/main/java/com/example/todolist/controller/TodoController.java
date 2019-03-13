@@ -34,15 +34,15 @@ public class TodoController {
                                   @RequestParam(value = "limit", required = false, defaultValue = "5") int size,
                                   Sort sort){
 
-        LOGGER.trace("Trace");
-        LOGGER.debug("Debug");
-        LOGGER.info("Info");
-        LOGGER.warn("Warn");
-        LOGGER.error("Error");
-        LOGGER.info("findAll: title: {} | id: {} | offset: {} | limit: {} | sort: {}", title, id, page, size, sort);
-
+//        LOGGER.trace("Trace");
+//        LOGGER.debug("Debug");
+//        LOGGER.info("Info");
+//        LOGGER.warn("Warn");
+//        LOGGER.error("Error");
+//        LOGGER.info("findAll: title: {} | id: {} | offset: {} | limit: {} | sort: {}", title, id, page, size, sort);
+//
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-
+//
         if(id != null) {
             return new ResponseEntity(todoRepository.findById(id), HttpStatus.OK);
         }

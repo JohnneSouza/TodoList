@@ -38,9 +38,9 @@ public class TodoJob {
             todoRepository.save(todo);
             int random = new Random().nextInt(3);
             LOGGER.info(String.valueOf(random));
-            if (random == 2){
-                throw new Exception("\nNumber 3 was generated.\n");
-            }
+//            if (random == 2){
+//                throw new Exception("\nNumber 3 was generated.\n");
+//            }
             readFile();
         }catch (Exception e){
             LOGGER.error("Error found on TodoJob: ", e);
