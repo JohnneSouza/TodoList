@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 @RequestMapping("todo")
 public class TodoController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(TodoController.class);
+//    private final static Logger LOGGER = LoggerFactory.getLogger(TodoController.class);
     private final TodoRepository todoRepository;
 
     @Autowired
@@ -42,7 +43,7 @@ public class TodoController {
 //        LOGGER.info("findAll: title: {} | id: {} | offset: {} | limit: {} | sort: {}", title, id, page, size, sort);
 //
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-//
+
         if(id != null) {
             return new ResponseEntity(todoRepository.findById(id), HttpStatus.OK);
         }
@@ -69,19 +70,11 @@ public class TodoController {
         return new ResponseEntity<>(todo, HttpStatus.OK);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Todo> udpateTodo(@RequestBody Todo todo, @PathVariable long id){
-//        Todo dbTodo = todoRepository.findById(id).orElse(todo);
-//        dbTodo.setTitle(todo.getTitle() != null && todo.getTitle().isEmpty()? todo.getTitle() : dbTodo.getTitle());
-//        dbTodo.setTitle(todo.getDescription() != null && todo.getDescription().isEmpty()? todo.getDescription() : dbTodo.getDescription());
-//        dbTodo.setFinish(todo.getFinish() != null ? todo.getFinish() : dbTodo.getFinish());
-//
-//        return new ResponseEntity<>(dbTodo, HttpStatus.OK);
-//    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Todo>> deleteTodo(@RequestBody Todo todo, @PathVariable long id){
-        todoList.removeIf(t -> t.getId().equals(id));
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity deleteTodo (@PathVariable long id){
+        todoRepository.deleteById(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
