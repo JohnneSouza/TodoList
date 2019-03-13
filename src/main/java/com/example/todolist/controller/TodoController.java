@@ -3,6 +3,8 @@ package com.example.todolist.controller;
 import com.example.todolist.model.Todo;
 import com.example.todolist.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +21,23 @@ public class TodoController {
 
     private List<Todo> todoList = new ArrayList<>();
 
-    @GetMapping
-    public ResponseEntity findAll(){
-        return new ResponseEntity(todoRepository.findAll(), HttpStatus.OK);
-    }
+    @GetMapping()
+    //@RequestMapping(method = RequestMethod.GET, path = "/")
+    public ResponseEntity findAll(@RequestParam(value = "title",required = false) String title,
+                                  @RequestParam(value = "id", required = false) Long id,
+                                  @RequestParam(value = "offset", required = false, defaultValue = "0") int page,
+                                  @RequestParam(value = "limit", required = false, defaultValue = "5") int size,
+                                  Sort sort){
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
 
-    @GetMapping("/{title}")
-    public ResponseEntity findByTittle(@RequestParam(value = "title", required = false) String title){
-        if (title !=null) {
-            return new ResponseEntity(todoRepository.findByTitle(title), HttpStatus.OK);
+        if(id != null) {
+            return new ResponseEntity(todoRepository.findById(id), HttpStatus.OK);
         }
-        return new ResponseEntity(todoRepository.findAll(), HttpStatus.OK);
+
+        if(title != null) {
+            return new ResponseEntity(todoRepository.findByTitle(title, pageRequest), HttpStatus.OK);
+        }
+        return new ResponseEntity(todoRepository.findAll(pageRequest), HttpStatus.OK);
     }
 
     @PostMapping
