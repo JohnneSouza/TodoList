@@ -2,6 +2,8 @@ package com.example.todolist.controller;
 
 import com.example.todolist.model.Todo;
 import com.example.todolist.repository.TodoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,8 +18,11 @@ import java.util.List;
 @RequestMapping("todo")
 public class TodoController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(TodoController.class);
+    private final TodoRepository todoRepository;
+
     @Autowired
-    private TodoRepository todoRepository;
+    private TodoController (TodoRepository todoRepository){this.todoRepository = todoRepository;}
 
     private List<Todo> todoList = new ArrayList<>();
 
@@ -28,6 +33,14 @@ public class TodoController {
                                   @RequestParam(value = "offset", required = false, defaultValue = "0") int page,
                                   @RequestParam(value = "limit", required = false, defaultValue = "5") int size,
                                   Sort sort){
+
+        LOGGER.trace("Trace");
+        LOGGER.debug("Debug");
+        LOGGER.info("Info");
+        LOGGER.warn("Warn");
+        LOGGER.error("Error");
+        LOGGER.info("findAll: title: {} | id: {} | offset: {} | limit: {} | sort: {}", title, id, page, size, sort);
+
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
         if(id != null) {
