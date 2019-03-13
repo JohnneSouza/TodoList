@@ -2,12 +2,16 @@ package com.example.todolist.job;
 
 import com.example.todolist.model.Todo;
 import com.example.todolist.repository.TodoRepository;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 
@@ -37,9 +41,26 @@ public class TodoJob {
             if (random == 2){
                 throw new Exception("\nNumber 3 was generated.\n");
             }
+            readFile();
         }catch (Exception e){
             LOGGER.error("Error found on TodoJob: ", e);
         }
+    }
+
+    private void readFile() {
+        LOGGER.info("Reading CSV: ");
+        try {
+            CSVReader reader = new CSVReaderBuilder(new FileReader("loggin.csv"))
+                    .withSkipLines(1)
+                    .build();
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                LOGGER.info("Value1: {} | Value2: {}", nextLine[0], nextLine[1]);
+            }
+        }catch (IOException ex){
+            LOGGER.error("Error reading CSV File", ex);
+        }
+
     }
 
 }
