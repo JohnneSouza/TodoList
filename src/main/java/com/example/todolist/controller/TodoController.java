@@ -1,5 +1,6 @@
 package com.example.todolist.controller;
 
+import com.example.todolist.message.TodoProducer;
 import com.example.todolist.model.Todo;
 import com.example.todolist.repository.TodoRepository;
 import org.slf4j.Logger;
@@ -19,9 +20,21 @@ import java.util.List;
 @RequestMapping("todo")
 public class TodoController {
 
-    @Autowired
-    private TodoRepository todoRepository;
+    private final static Logger LOGGER = LoggerFactory.getLogger(TodoController.class);
+    private final TodoRepository todoRepository;
+    private final TodoProducer todoProducer;
 
+    @Autowired
+    public TodoController(TodoRepository todoRepository, TodoProducer todoProducer){
+        this.todoRepository = todoRepository;
+        this.todoProducer = todoProducer;
+    }
+
+    @PostMapping
+    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo){
+        todoProducer.sendTodoMessage(todo);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     private List<Todo> todoList = new ArrayList<>();
 
@@ -31,14 +44,6 @@ public class TodoController {
                                   @RequestParam(value = "offset", required = false, defaultValue = "0") int page,
                                   @RequestParam(value = "limit", required = false, defaultValue = "5") int size,
                                   Sort sort){
-
-//        LOGGER.trace("Trace");
-//        LOGGER.debug("Debug");
-//        LOGGER.info("Info");
-//        LOGGER.warn("Warn");
-//        LOGGER.error("Error");
-//        LOGGER.info("findAll: title: {} | id: {} | offset: {} | limit: {} | sort: {}", title, id, page, size, sort);
-//
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
         if(id != null) {
@@ -49,12 +54,6 @@ public class TodoController {
             return new ResponseEntity(todoRepository.findByTitle(title, pageRequest), HttpStatus.OK);
         }
         return new ResponseEntity(todoRepository.findAll(pageRequest), HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo){
-        Todo dbTodo = todoRepository.save(todo);
-        return new ResponseEntity<>(dbTodo, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
