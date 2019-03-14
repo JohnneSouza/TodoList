@@ -8,10 +8,12 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class SecurityUserDetail implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -19,6 +21,18 @@ public class SecurityUserDetail implements UserDetailsService {
     @Autowired
     public SecurityUserDetail(UserRepository userRepository){
         this.userRepository = userRepository;
+        User user = new User();
+        user.setName("Test");
+        user.setUserName("Test");
+        user.setPassword("{noop}test");
+        user.setAdmin(false);
+        User admin = new User();
+        admin.setName("Admin");
+        admin.setUserName("Admin");
+        admin.setPassword("{noop}admin");
+        admin.setAdmin(true);
+        userRepository.save(user);
+        userRepository.save(admin);
     }
 
 

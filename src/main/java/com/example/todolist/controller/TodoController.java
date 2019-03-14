@@ -19,16 +19,13 @@ import java.util.List;
 @RequestMapping("todo")
 public class TodoController {
 
-//    private final static Logger LOGGER = LoggerFactory.getLogger(TodoController.class);
-    private final TodoRepository todoRepository;
-
     @Autowired
-    private TodoController (TodoRepository todoRepository){this.todoRepository = todoRepository;}
+    private TodoRepository todoRepository;
+
 
     private List<Todo> todoList = new ArrayList<>();
 
     @GetMapping()
-    //@RequestMapping(method = RequestMethod.GET, path = "/")
     public ResponseEntity findAll(@RequestParam(value = "title",required = false) String title,
                                   @RequestParam(value = "id", required = false) Long id,
                                   @RequestParam(value = "offset", required = false, defaultValue = "0") int page,
