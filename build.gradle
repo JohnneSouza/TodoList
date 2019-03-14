@@ -29,10 +29,12 @@ dependencies {
 	implementation 'de.codecentric:spring-boot-admin-starter-server'
 	compileOnly 'org.projectlombok:lombok'
 	compile 'com.opencsv:opencsv:4.5'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 	runtimeOnly 'org.hsqldb:hsqldb'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	testImplementation 'org.springframework.boot:spring-security-test'
 }
 
